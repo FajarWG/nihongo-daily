@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model DailyStudyLog {
+  id              String   @id @default(uuid())
+  date            DateTime @default(now())
+  chapterNumber   Int
+  taskVocab       Boolean  @default(false)
+  taskBunkei      Boolean  @default(false)
+  taskListening   Boolean  @default(false)
+  taskExercise    Boolean  @default(false)
+  taskDuolingoXP  Int      @default(0)
+  note            String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model VocabularyProgress {
+  id        String   @id @default(uuid())
+  chapter   Int
+  vocabJp   String
+  vocabId   String   // Unique identifier for the vocab word if needed, or just use vocabJp
+  status    Int      @default(0) // 0 = learning, 1 = memorized
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([chapter, vocabJp])
+}
+
+model ChapterProgress {
+  id             String   @id @default(uuid())
+  chapter        Int      @unique
+  isFinishedDayA Boolean  @default(false)
+  isFinishedDayB Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model QuizResult {
+  id        String   @id @default(uuid())
+  chapter   Int
+  score     Int
+  total     Int
+  questions Json     // Store the generated questions
+  createdAt DateTime @default(now())
+}
