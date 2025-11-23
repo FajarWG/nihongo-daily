@@ -3,17 +3,21 @@
 import React, { useState } from 'react';
 import QuizModule from '@/components/Quiz/QuizModule';
 import VocabList from '@/components/Chapter/VocabList';
+import BunkeiList from '@/components/Chapter/BunkeiList';
 import { VocabItem } from '@/data/vocab';
+import { BunkeiItem } from '@/data/bunkei';
 
 interface ChapterContentProps {
   chapterId: number;
   vocabList: VocabItem[];
+  bunkeiList: BunkeiItem[];
   initialProgress: { vocabJp: string; status: number }[];
 }
 
 export default function ChapterContent({
   chapterId,
   vocabList,
+  bunkeiList,
   initialProgress,
 }: ChapterContentProps) {
   const [activeTab, setActiveTab] = useState('vocab');
@@ -68,9 +72,7 @@ export default function ChapterContent({
           )}
           {activeTab === 'quiz' && <QuizModule chapter={chapterId} />}
           {activeTab === 'bunkei' && (
-            <div className="text-center text-gray-500">
-              Bunkei explanation coming soon...
-            </div>
+            <BunkeiList bunkeiList={bunkeiList} />
           )}
         </div>
       </div>
