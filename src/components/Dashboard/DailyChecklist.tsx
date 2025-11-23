@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useState } from 'react';
+import { toggleDailyTask } from '@/app/actions/dailyLog';
 
 interface Task {
   id: string;
   label: string;
   completed: boolean;
+  field: string; // Added to map to DB field
 }
 
 interface DailyChecklistProps {
@@ -23,13 +25,29 @@ const DailyChecklist: React.FC<DailyChecklistProps> = ({
 }) => {
   const [tasks, setTasks] = useState(initialTasks);
 
-  const toggleTask = (id: string) => {
+  const toggleTask = async (id: string, field: string) => {
+    const task = tasks.find((t) => t.id === id);
+    if (!task) return;
+
+    const newCompleted = !task.completed;
+
     setTasks((prev) =>
-      prev.map((task) =>
-        task.id === id ? { ...task, completed: !task.completed } : task
+      prev.map((t) =>
+        t.id === id ? { ...t, completed: newCompleted } : t
       )
     );
-    // TODO: Sync with DB
+
+    try {
+      await toggleDailyTask(new Date(), field, newCompleted);
+    } catch (error) {
+      console.error('Failed to update task', error);
+      // Revert on error
+      setTasks((prev) =>
+        prev.map((t) =>
+          t.id === id ? { ...t, completed: !newCompleted } : t
+        )
+      );
+    }
   };
 
   return (
@@ -51,7 +69,7 @@ const DailyChecklist: React.FC<DailyChecklistProps> = ({
               <input
                 type="checkbox"
                 checked={task.completed}
-                onChange={() => toggleTask(task.id)}
+                onChange={() => toggleTask(task.id, task.field)}
                 className="peer sr-only"
               />
               <div className="h-5 w-5 bg-gray-200 rounded transition-colors peer-checked:bg-blue-500"></div>

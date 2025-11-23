@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { updateDuolingoXP } from '@/app/actions/dailyLog';
 
 interface DuolingoWidgetProps {
   dailyGoalXP: number;
@@ -9,10 +10,12 @@ interface DuolingoWidgetProps {
 
 const DuolingoWidget: React.FC<DuolingoWidgetProps> = ({
   dailyGoalXP,
-  currentXP,
+  currentXP: initialXP,
 }) => {
   const [time, setTime] = useState(0);
   const [isActive, setIsActive] = useState(false);
+  const [xp, setXp] = useState(initialXP);
+  const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -34,6 +37,11 @@ const DuolingoWidget: React.FC<DuolingoWidgetProps> = ({
       .padStart(2, '0')}`;
   };
 
+  const handleXpChange = async (newXp: number) => {
+    setXp(newXp);
+    await updateDuolingoXP(new Date(), newXp);
+  };
+
   return (
     <div className="bg-gradient-to-br from-[#58cc02] to-[#46a302] rounded-2xl p-6 text-white shadow-[0_4px_15px_rgba(88,204,2,0.3)]">
       <div className="flex items-center gap-3 mb-5">
@@ -43,8 +51,28 @@ const DuolingoWidget: React.FC<DuolingoWidgetProps> = ({
       
       <div className="flex justify-between items-end">
         <div className="flex flex-col">
-          <span className="text-4xl font-extrabold leading-none">{currentXP}</span>
-          <span className="text-sm opacity-90">/ {dailyGoalXP} XP</span>
+          {isEditing ? (
+            <input
+              type="number"
+              className="text-4xl font-extrabold leading-none bg-white/20 rounded px-2 w-24 text-white focus:outline-none focus:ring-2 focus:ring-white"
+              value={xp}
+              onChange={(e) => setXp(Number(e.target.value))}
+              onBlur={() => {
+                setIsEditing(false);
+                handleXpChange(xp);
+              }}
+              autoFocus
+            />
+          ) : (
+            <span 
+              className="text-4xl font-extrabold leading-none cursor-pointer hover:opacity-80"
+              onClick={() => setIsEditing(true)}
+              title="Click to edit XP"
+            >
+              {xp}
+            </span>
+          )}
+          <span className="text-sm opacity-90 mt-1">/ {dailyGoalXP} XP</span>
         </div>
         
         <div className="flex flex-col items-end gap-2">
