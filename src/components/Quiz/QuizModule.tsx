@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import styles from './QuizModule.module.css';
 
 interface Question {
   question: string;
@@ -70,15 +69,15 @@ const QuizModule: React.FC<QuizModuleProps> = ({ chapter }) => {
   };
 
   if (loading) {
-    return <div className={styles.loading}>Generating Quiz with AI...</div>;
+    return <div className="text-center p-10 text-gray-500 italic">Generating Quiz with AI...</div>;
   }
 
   if (!started) {
     return (
-      <div className={styles.container}>
-        <h3>Chapter {chapter} Mini Test</h3>
-        <p>Test your knowledge of vocabulary and grammar.</p>
-        <button className={styles.startButton} onClick={startQuiz}>
+      <div className="bg-white rounded-2xl p-8 shadow-sm max-w-2xl mx-auto text-center">
+        <h3 className="text-2xl font-bold mb-4">Chapter {chapter} Mini Test</h3>
+        <p className="text-gray-600 mb-6">Test your knowledge of vocabulary and grammar.</p>
+        <button className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors" onClick={startQuiz}>
           Start Quiz
         </button>
       </div>
@@ -87,14 +86,14 @@ const QuizModule: React.FC<QuizModuleProps> = ({ chapter }) => {
 
   if (showResult) {
     return (
-      <div className={styles.container}>
-        <h3>Quiz Complete!</h3>
-        <div className={styles.score}>
+      <div className="bg-white rounded-2xl p-8 shadow-sm max-w-2xl mx-auto text-center">
+        <h3 className="text-2xl font-bold mb-6">Quiz Complete!</h3>
+        <div className="text-5xl font-extrabold text-blue-600 mb-6">
           {score} / {questions.length}
         </div>
-        <p>{score >= 8 ? 'Sugoi! 🎉' : 'Ganbatte! Keep practicing.'}</p>
+        <p className="text-lg text-gray-700 mb-8">{score >= 8 ? 'Sugoi! 🎉' : 'Ganbatte! Keep practicing.'}</p>
         <button
-          className={styles.startButton}
+          className="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
           onClick={() => {
             setStarted(false);
             setShowResult(false);
@@ -112,26 +111,28 @@ const QuizModule: React.FC<QuizModuleProps> = ({ chapter }) => {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <div className={styles.container}>
-      <div className={styles.progress}>
+    <div className="bg-white rounded-2xl p-8 shadow-sm max-w-2xl mx-auto">
+      <div className="text-sm text-gray-500 mb-4">
         Question {currentQuestionIndex + 1} / {questions.length}
       </div>
-      <h4 className={styles.question}>{currentQuestion.question}</h4>
-      <div className={styles.choices}>
+      <h4 className="text-xl font-semibold text-gray-900 mb-6">{currentQuestion.question}</h4>
+      <div className="flex flex-col gap-3 mb-6">
         {currentQuestion.choices.map((choice, index) => (
           <button
             key={index}
-            className={`${styles.choiceButton} ${
-              selectedAnswer === choice ? styles.selected : ''
+            className={`p-4 border-2 rounded-lg text-left transition-all duration-200 ${
+              selectedAnswer === choice 
+                ? 'border-blue-500 bg-blue-50' 
+                : 'border-gray-100 bg-white hover:border-blue-200 hover:bg-blue-50/50'
             } ${
               isAnswerChecked && choice === currentQuestion.correct_answer
-                ? styles.correct
+                ? '!border-green-500 !bg-green-50 !text-green-700'
                 : ''
             } ${
               isAnswerChecked &&
               selectedAnswer === choice &&
               choice !== currentQuestion.correct_answer
-                ? styles.wrong
+                ? '!border-red-500 !bg-red-50 !text-red-700'
                 : ''
             }`}
             onClick={() => handleAnswer(choice)}
@@ -143,22 +144,22 @@ const QuizModule: React.FC<QuizModuleProps> = ({ chapter }) => {
       </div>
       
       {isAnswerChecked && (
-        <div className={styles.rationale}>
+        <div className="bg-gray-50 p-4 rounded-lg mb-6 text-gray-700 text-sm">
           <strong>Explanation:</strong> {currentQuestion.rationale}
         </div>
       )}
 
-      <div className={styles.footer}>
+      <div className="flex justify-end">
         {!isAnswerChecked ? (
           <button
-            className={styles.actionButton}
+            className="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={checkAnswer}
             disabled={!selectedAnswer}
           >
             Check Answer
           </button>
         ) : (
-          <button className={styles.actionButton} onClick={nextQuestion}>
+          <button className="bg-gray-900 text-white px-6 py-3 rounded-lg font-semibold hover:bg-gray-800 transition-colors" onClick={nextQuestion}>
             {currentQuestionIndex === questions.length - 1
               ? 'Finish'
               : 'Next Question'}

@@ -1,4 +1,3 @@
-import styles from './page.module.css';
 import ProgressTracker from '@/components/Dashboard/ProgressTracker';
 import DailyChecklist from '@/components/Dashboard/DailyChecklist';
 import DuolingoWidget from '@/components/Dashboard/DuolingoWidget';
@@ -24,22 +23,23 @@ export default function Home() {
   };
 
   return (
-    <main className={styles.main}>
-      <div className={styles.container}>
-        <header className={styles.header}>
-          <h1 className={styles.title}>Nihongo Daily</h1>
-          <p className={styles.subtitle}>Ganbatte! 50 Days to Mastery</p>
+    <main className="min-h-screen p-5 md:p-10 bg-gradient-to-br from-gray-50 to-gray-200">
+      <div className="max-w-4xl mx-auto">
+        <header className="mb-10">
+          <h1 className="text-4xl font-extrabold mb-2 bg-gradient-to-r from-blue-600 to-pink-600 bg-clip-text text-transparent">
+            Nihongo Daily
+          </h1>
+          <p className="text-gray-500 text-lg">Ganbatte! 50 Days to Mastery</p>
         </header>
 
         <ProgressTracker
           currentChapter={mockData.currentChapter}
           totalChapters={mockData.totalChapters}
-          startDate={mockData.startDate}
           targetDate={mockData.targetDate}
         />
 
-        <div className={styles.grid}>
-          <div className={styles.column}>
+        <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-6">
+          <div className="flex flex-col gap-6">
             <DailyChecklist
               day={mockData.day}
               chapter={mockData.currentChapter}
@@ -47,7 +47,7 @@ export default function Home() {
               tasks={mockData.tasks}
             />
           </div>
-          <div className={styles.column}>
+          <div className="flex flex-col gap-6">
             <DuolingoWidget
               dailyGoalXP={mockData.duolingoGoal}
               currentXP={mockData.currentXP}

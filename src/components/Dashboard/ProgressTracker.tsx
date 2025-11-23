@@ -1,10 +1,8 @@
 import React from 'react';
-import styles from './ProgressTracker.module.css';
 
 interface ProgressTrackerProps {
   currentChapter: number;
   totalChapters: number;
-  startDate: Date;
   targetDate: Date;
 }
 
@@ -19,18 +17,18 @@ const ProgressTracker: React.FC<ProgressTrackerProps> = ({
   );
 
   return (
-    <div className={styles.container}>
-      <div className={styles.header}>
-        <h2>Progress</h2>
-        <span>{daysLeft} days left</span>
+    <div className="glass rounded-2xl p-6 mb-6">
+      <div className="flex justify-between items-center mb-4">
+        <h2 className="text-xl font-semibold text-gray-900">Progress</h2>
+        <span className="text-sm text-gray-500">{daysLeft} days left</span>
       </div>
-      <div className={styles.progressBarContainer}>
+      <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden mb-3">
         <div
-          className={styles.progressBar}
+          className="h-full bg-gradient-to-r from-blue-500 to-pink-500 rounded-full transition-all duration-500 ease-in-out"
           style={{ width: `${progress}%` }}
         ></div>
       </div>
-      <div className={styles.stats}>
+      <div className="flex justify-between text-sm text-gray-500">
         <span>
           Chapter {currentChapter} of {totalChapters}
         </span>
